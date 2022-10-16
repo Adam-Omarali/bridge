@@ -1,7 +1,24 @@
+import { Button, Dropdown, excludedInputPropsForTextarea, Input } from "@nextui-org/react";
 import { useState } from "react";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { FormControlLabel } from "@mui/material";
 
 
 export function Testing() {
+
+    function createCommand() {
+        let cmd = { verb: returnName, url: showURL };
+        const res = fetch("http://localhost:3000/cmd", {
+          method: "POST",
+          body: JSON.stringify(cmd),
+        })
+          .then((promise) => promise.json())
+          .then((data) => data);
+        console.log(res);
+    }
 
     const [showMenu, setMenu] = useState();
     const [showURL, setURL] = useState("Insert URL Here");
@@ -9,40 +26,38 @@ export function Testing() {
 
     return (
         <div>
-            <head>
-                <h2>Hi, My Name is George</h2>
-            </head>
-            <body>
+            <div>
+                <Button type="button" onClick={() => setMenu(
+                    !showMenu
+                )}>Add a Command</Button>
+                {showMenu && 
                 <div>
-                    <button type = "button" onClick={() => setMenu(
-                        !showMenu
-                    )}>+Cmd</button>
-                    {showMenu && 
-                    <div>
-                        <URL name={showURL} setURL = {setURL}></URL>
-                        <Menu name={returnName} setName={setName}></Menu>
-                    </div>}
-                    
-                </div>
-                <p>{returnName}</p>
-                <p>{showURL}</p>
-            </body>
+                    <URL name={showURL} setURL = {setURL}></URL>
+                    <Menu name={returnName} setName={setName}></Menu>
+                    <Button style={{marginTop: "20px"}} onSubmit={() => createCommand()}>Submit</Button>
+                </div>}
+                
+            </div>
         </div>
     );
 }
 
 function Menu(props) {
+
     return(
         
-        <div>
-             
-            <label for="cmds">Choose a Command:</label>
-            <select name="cmds" id="cmds" value={props.returnName} onChange={(e) => props.setName(e.target.value)} >
-                <option value="Set">Set</option>
-                <option value="Delete">Delete</option>
-                <option value="Add">Add</option>
-                <option value="Record">Record</option>
-            </select>
+        <div style={{paddingTop: '20px'}}>
+                <select
+                value={props.name}
+                label="Method"
+                onChange={(e) => props.setName(e.target.value)}
+                style={{border: 'none', width: '200px', height: '40px', borderRadius: '8px'}}
+                >
+                    <option value={"Create"}>Create</option>
+                    <option value={"Update"}>Update</option>
+                    <option value={"Delete"}>Delete</option>
+                </select>
+            
         </div>
     );
 }
@@ -51,12 +66,8 @@ function Menu(props) {
 function URL(props) {
  return(      
     <div>
-    <fieldset name = "URL" id = "URL" value = {props.showURL} onKeyPress={(e) => e.key == "Enter" ? props.setURL(e.target.value) : null}>
-    <legend>URL:</legend>
-    <label for="URL">URL:</label>
-    <input type="text" id="URL" name="URL">
-    </input>
-    </fieldset>
+        <h3>Noun</h3>
+        <Input placeholder="" value={props.showURL} onChange={(e) => props.setURL(e.target.value)}></Input>
     </div>
  );
 }

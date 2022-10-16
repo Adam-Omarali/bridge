@@ -1,0 +1,17 @@
+import "../App.css";
+
+function Header(props){
+    return(
+        <header>
+            <div className="nav">
+                <h1 onClick={() => props.setPage("user")}>BRIDGE</h1>
+                <div className="inline">
+                    <p onClick={() => props.setPage("user")}>Users</p>
+                    <p onClick={() => props.setPage("company")}>Companies</p>
+                </div>
+            </div>
+        </header>
+    )
+}
+
+export default Header
