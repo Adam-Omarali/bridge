@@ -54,7 +54,7 @@ function Microphone(){
             >
               Record
             </Button>
-            {/* {mediaBlobUrl && <video src={mediaBlobUrl} controls autoPlay />} */}
+            {mediaBlobUrl && <video src={mediaBlobUrl} controls autoPlay />}
             <p>{"Transcription: " + transcript}</p>
             <p>{confidence * 100 + "% confidence in transcription"}</p>
             <p>{"Command: " + method}</p>

@@ -1,6 +1,16 @@
 var express = require('express');
 var router = express.Router();
 const { Client } = require('@notionhq/client');
+const { updatePage } = require('@notionhq/client/build/src/api-endpoints');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
+
+async function getMethod(){
+    const res = await fetch("http://localhost:3000/method", {
+        method: 'GET'
+    })
+    return await res.json()
+}
 
 
 async function searchPage(notion, query){
@@ -18,6 +28,22 @@ async function searchPage(notion, query){
     return response
 }
 
+// async function updatePage(notion, id){
+//     const response = await notion.pages.update({
+//         page_id: id,
+//         properties: {
+//             "Details": {
+//                 "rich_text": [
+//                   {
+//                     "type": "text",
+//                     "text": {
+//                       "content": "Some more text with "
+//                     }
+//                   },
+//             ]}
+//         }})
+// }
+
 async function deletePage(notion, id){
 
     const response = await notion.pages.update({
@@ -29,7 +55,7 @@ async function deletePage(notion, id){
 
 async function createPage(notion){
 
-    let database_id = "7efcd3c2379b4fb69d382dc8a3009a4d"
+    let database_id = "2de77b6978cf40ad90403c54fa970b6e"
 
     const response = await notion.pages.create({
         "parent": {
@@ -41,7 +67,7 @@ async function createPage(notion){
                 "title": [
                     {
                         "text": {
-                            "content": "Tuscan kale"
+                            "content": "Just created a new page!"
                         }
                     }
                 ]
@@ -64,8 +90,22 @@ router.get('/', async function(req, res, next) {
 
     // await createPage(notion)
 
-    const ret = (await searchPage(notion, 'life')).results
-    console.log(ret)
+    const method = await getMethod()
+
+    console.log(method)
+    console.log(1)
+    if(method === "Create"){
+        await createPage(notion)
+    }
+    else if(method === "Delete"){
+        const ret = (await searchPage(notion, 'delete')).results
+        await deletePage(notion, ret[0].id)
+    }
+    // else{
+    //     const ret = (await searchPage(notion, 'update')).results
+    //     await updatePage(notion, ret[0].id)
+    // }
+
     // for(let i = 0; i < ret.length; i++){
     //     await deletePage(notion, ret[i].id)
     // }

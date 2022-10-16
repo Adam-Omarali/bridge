@@ -11,10 +11,12 @@ const upload = multer({
 });
 const SpeechToTextV1 = require("ibm-watson/speech-to-text/v1");
 const { IamAuthenticator } = require("ibm-watson/auth");
+const data = require("./lib/data.json")
 
 let indexRouter = require("./routes/index");
 let usersRouter = require("./routes/users");
 let cmdRouter = require("./routes/cmd");
+let methodRoute = require("./routes/method")
 const { methodPrediction } = require("./lib/ai");
 
 const app = express();
@@ -43,6 +45,7 @@ app.use(cors());
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/cmd", cmdRouter);
+app.use("/method", methodRoute)
 app.post("/upload", upload.single("file"), async (req, res) => {
   console.log(req.file);
 
@@ -66,7 +69,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
   if (owo.result.results.length > 0)
     confidence = owo.result.results[0].alternatives[0].confidence;
 
-  if (transcript && confidence) method = methodPrediction(transcript);
+  if (transcript && confidence) method = await methodPrediction(transcript);
   console.log("method: " + method);
 
   if (method) {
@@ -80,7 +83,10 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       );
     }
     prediction = (await method).classifications[0].prediction;
+    data.method = prediction
   }
+
+
 
   res.status(200).json({
     transcript: transcript,
