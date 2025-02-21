@@ -16,17 +16,20 @@ function Microphone(){
     const [confidence, setConfidence] = useState(0);
     const [method, setMethod] = useState("");
     const [isRecording, setIsRecording] = useState(false);
+    
+    
 
     useEffect(() => {
         console.log("mediaBlobUrl: ", mediaBlobUrl);
         async function getTranscript() {
-        if (mediaBlobUrl) {
-            const res = await uploadAudio();
-            console.log("res: ", res);
-            setTranscript(res.transcript);
-            setConfidence(res.confidence);
-            setMethod(res.method);
-        }
+          if (mediaBlobUrl) {
+              const res = await uploadAudio();
+              console.log("res: ", res);
+              setTranscript(res.transcript);
+              setConfidence(res.confidence);
+              setMethod(res.method);
+              await fetch("http://localhost:3005/changes?v=" + localStorage.getItem('notionToken'))
+          }
         }
         getTranscript();
     }, [mediaBlobUrl]);

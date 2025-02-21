@@ -1,4 +1,5 @@
 import "../App.css";
+import Auth from './Auth';
 
 function Header(props){
     return(
@@ -8,6 +9,7 @@ function Header(props){
                 <div className="inline">
                     <p onClick={() => props.setPage("user")}>Users</p>
                     <p onClick={() => props.setPage("company")}>Companies</p>
+                    <Auth />
                 </div>
             </div>
         </header>

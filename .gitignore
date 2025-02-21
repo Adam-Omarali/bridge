@@ -1,0 +1,5 @@
+**/node_modules
+**/bin
+**/credentials.json
+**/uploads
+**/.env

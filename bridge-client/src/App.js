@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { Button } from "@nextui-org/react";
 import Header from "./components/Header";
 import Microphone from "./components/Microphone";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import TokenHandler from './components/TokenHandler';
 
 function App() {
 
@@ -14,18 +16,26 @@ function App() {
   // createCommand()
 
   let content = <Microphone />
-
   if (page !== "user"){
     content = <Testing />
   }
 
   return (
-    <div className="App">
-      <Header setPage={setPage}/>
-      <div style={{paddingTop: '10px'}}>
-        {content}
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={
+          <>
+            <TokenHandler />
+            <div className="App">
+              <Header setPage={setPage} />
+              <div style={{paddingTop: '10px'}}>
+                {content}
+              </div>
+            </div>
+          </>
+        } />
+      </Routes>
+    </Router>
   );
 }
 
